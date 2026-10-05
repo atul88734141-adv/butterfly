@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Butterfly Scanner · Delta Exchange</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<header class="nav">
+  <div class="brand"><span class="logo">🦋</span><span><b>Butterfly</b> Scanner</span></div>
+  <nav class="tabs">
+    <button class="tab active" data-tab="BTC">₿ BTC <i id="n-BTC" class="badge"></i></button>
+    <button class="tab" data-tab="ETH">Ξ ETH <i id="n-ETH" class="badge"></i></button>
+  </nav>
+  <div class="live"><span id="dot" class="dot"></span><span id="status">Connecting…</span></div>
+</header>
+
+<main>
+  <section class="stats" id="stats"></section>
+
+  <section class="controls">
+    <label>Expiry<select id="f-exp"></select></label>
+    <label>Type<select id="f-type"><option value="">Calls + Puts</option><option value="C">Calls</option><option value="P">Puts</option></select></label>
+    <label>Sort by<select id="f-sort"><option value="cost">Lowest cost</option><option value="rr">Best reward : risk</option><option value="profit">Highest max profit</option></select></label>
+    <label>Rows<select id="f-rows"><option>25</option><option selected>50</option><option>100</option><option>250</option></select></label>
+    <label>Refresh<select id="f-int"><option value="1000">1 s</option><option value="3000" selected>3 s</option><option value="5000">5 s</option><option value="10000">10 s</option></select></label>
+    <label class="check"><input type="checkbox" id="f-arb"> Arbitrage only</label>
+  </section>
+
+  <div class="card">
+    <table>
+      <thead><tr>
+        <th>#</th><th>Expiry</th><th>Type</th><th>Strikes<small>buy · sell 2× · buy &nbsp;|&nbsp; bid / ask below</small></th><th>Width</th>
+        <th>Net cost<small>neg = credit</small></th><th>Worst case</th><th>Best case</th><th>R : R</th><th>Qty</th><th>Signal</th>
+      </tr></thead>
+      <tbody id="rows"></tbody>
+    </table>
+  </div>
+
+  <h2 class="sec">Profit after fees <small>opening fees only · 3.5% of option price per contract, capped at $8 per BTC / $0.30 per ETH · 4 contracts per butterfly (buy 1, sell 2, buy 1)</small></h2>
+  <div class="card">
+    <table>
+      <thead><tr>
+        <th>#</th><th>Expiry</th><th>Type</th><th>Strikes<small>buy · sell 2× · buy &nbsp;|&nbsp; bid / ask below</small></th><th>Net cost</th><th>Open fees</th>
+        <th>Cost + fees<small>neg = credit</small></th><th>Worst case</th><th>Best case</th><th>Qty</th><th>Total @ qty<small>worst case × qty × lot</small></th><th>Signal</th>
+      </tr></thead>
+      <tbody id="rows2"></tbody>
+    </table>
+  </div>
+
+  <p class="note">Cost = ask(lower) + ask(upper) − 2 × bid(middle), equal-width wings, at current best bid/ask. If cost &lt; 0 you are paid to open a position whose expiry payoff can never be negative → locked profit. The first table ignores fees; the second deducts opening fees only (no closing fees). Slippage and thin books are <b>not</b> included; verify before trading. Prices are USD per 1 underlying; “/lot” uses contract size BTC 0.001, ETH 0.01.</p>
+</main>
+<script src="script.js"></script>
+</body>
+</html>
